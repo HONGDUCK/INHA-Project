@@ -137,7 +137,7 @@ int main(int argc, char* argv[]) {
     int row = sqrt(inputsize);
     int kernelsize = 9; //kernel size 변수로 잡는 법을 잘 모르겠음.
     int kernelrow = sqrt(kernelsize);
-    int convcount = row*kernelrow;
+    int convcount = row*(row-kernelrow+1);
 
     Convolution_in_CKKS(inputDouble, kernelDouble, st,inputsize, row, kernelrow, convcount);
 
