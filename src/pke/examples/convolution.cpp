@@ -40,52 +40,6 @@
 
 using namespace lbcrypto;
 
-template <class T>
-T plainInnerProduct(std::vector<T> vec) {
-    T res = 0.0;
-    for (auto& el : vec) {
-        res += (el * el);
-    }
-    return res;
-}
-
-bool innerProductBFV(std::vector<int64_t>& incomingVector) {
-    int64_t expectedResult = plainInnerProduct(incomingVector);
-    /////////////////////////////////////////////////////////
-    // Crypto CryptoParams
-    /////////////////////////////////////////////////////////
-    CCParams<CryptoContextBFVRNS> parameters;
-    parameters.SetPlaintextModulus(65537);
-    parameters.SetMultiplicativeDepth(20);
-    parameters.SetSecurityLevel(lbcrypto::HEStd_NotSet);
-    parameters.SetRingDim(1 << 7);
-    uint32_t batchSize = parameters.GetRingDim() / 2;
-
-    /////////////////////////////////////////////////////////
-    // Set crypto params and create context
-    /////////////////////////////////////////////////////////
-    lbcrypto::CryptoContext<lbcrypto::DCRTPoly> cc;
-    cc = GenCryptoContext(parameters);
-
-    // Enable the features that you wish to use.
-    cc->Enable(PKE);
-    cc->Enable(LEVELEDSHE);
-    cc->Enable(ADVANCEDSHE);
-
-    KeyPair keys = cc->KeyGen();
-    cc->EvalMultKeyGen(keys.secretKey);
-    cc->EvalSumKeyGen(keys.secretKey);
-
-    Plaintext plaintext1 = cc->MakePackedPlaintext(incomingVector);
-    auto ct1             = cc->Encrypt(keys.publicKey, plaintext1);
-    auto finalResult     = cc->EvalInnerProduct(ct1, ct1, batchSize);
-    lbcrypto::Plaintext res;
-    cc->Decrypt(keys.secretKey, finalResult, &res);
-    auto final = res->GetPackedValue()[0];
-
-    std::cout << "Expected Result: " << expectedResult << " Inner Product Result: " << final << std::endl;
-    return expectedResult == final;
-}
 
 void Convolution_in_CKKS(const std::vector<double>& incomingVector, const std::vector<double>& kernel, int st,int inputsize, int row,int kernelrow,int convcount) {
  
