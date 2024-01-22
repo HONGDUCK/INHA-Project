@@ -163,7 +163,18 @@ void Convolution_in_CKKS(const std::vector<double>& incomingVector, const std::v
  
 int main(int argc, char* argv[]) {
     std::vector<int64_t> vec = {1, 2, 3, 4, 5, 10, 14, 2, 3, 5, 6, 4, 3, 2, 3, 4, 5, 2, 6, 7, 11, 2, 12, 5, 5};
+    // 5*5 matrix
+    //{1, 2, 3, 4, 5,
+    // 10, 14, 2, 3, 5,
+    // 6, 4, 3, 2, 3, 
+    // 4, 5, 2, 6, 7,
+    // 11, 2, 12, 5, 5}
+
     std::vector<int64_t> kernel = {1, -1, 1, 0, 0, 0, 1, 1, 0, 0, -1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    //3*3 matrix
+    //{1, -1, 0,
+    // 0, 1, 1, 
+    // -1, 0, 1}
 
     std::vector<double> inputDouble(vec.begin(), vec.end());
     std::vector<double> kernelDouble(kernel.begin(),kernel.end());
